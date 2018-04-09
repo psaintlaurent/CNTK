@@ -2423,6 +2423,7 @@ namespace CNTK
         size_t maxTempMemSizeInSamples,
         const std::wstring& name)
     {
+        //auto deviceKind = convolutionMap.GetValue()->Device().Type();
         if ((reductionRank != 0) && (reductionRank != 1))
             LogicError("reductionRank: must be 1 or 0.");
         if (groups == 0)
@@ -2435,7 +2436,7 @@ namespace CNTK
             return Internal::SpatialConvolution(convolutionMap, operand, strides, sharing, autoPadding, dilation,
                 maxTempMemSizeInSamples, name);
         }
-        /*else if (groups > 1)
+        /*else if (groups > 1 && deviceKind == DeviceKind::CPU && convolutionMap.Shape().Rank() > 4)
         {
             return Internal::GroupConvolution(convolutionMap, operand, strides, sharing, autoPadding, dilation,
                 groups, maxTempMemSizeInSamples, name);
@@ -3344,7 +3345,7 @@ namespace CNTK
         //        auto groupOperand = Slice(operandPlaceholder, { Axis(inputRank - 1) }, { i*inputChannelStepSize },
         //            { (i + 1)*inputChannelStepSize });
         //        opsOutputVector[i] = Internal::Convolution(groupConvMap, groupOperand, strides, sharing, autoPadding, dilation,
-        //            false, { 0 }, maxTempMemSizeInSamples, name)->Output();
+        //            false, { 0 }, PrimitiveFunction::convolutionOpDefaultValueForGroups, maxTempMemSizeInSamples, name)->Output();
         //    }
         //    auto splicedConv = Splice(opsOutputVector, Axis(inputRank - 1));
         //    return AsBlock(std::move(splicedConv), { { operandPlaceholder, operand } }, L"Convolution", name);
