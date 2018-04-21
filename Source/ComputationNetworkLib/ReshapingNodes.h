@@ -2103,9 +2103,12 @@ public:
 
             sourceGradient.ScatterToIndices(outputGradient, indices, row_elements);
         }
-        else
+        else//(inputIndex == 0)
         {
-            //No graidents pass through indices (the left operand), so do nothing
+            //No graidents pass through indices (the left operand), but still need to set the gradients to zeros 
+            //to avoid random passing through:
+            auto&  indicesGradient = InputRef(0).Gradient();
+            indicesGradient.SetValue(static_cast<ElemType>(0.0));
         }
     }
 
